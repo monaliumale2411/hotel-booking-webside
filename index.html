@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Hotel Booking</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+
+<header>
+    <h1>Hotel Booking Website</h1>
+</header>
+
+<!-- 🔍 Search -->
+<div class="search-bar">
+    <input type="text" id="city" placeholder="Enter City (Pune, Mumbai...)">
+    
+    <select id="guests">
+        <option value="1">1 Guest</option>
+        <option value="2">2 Guests</option>
+        <option value="3">3 Guests</option>
+        <option value="4">4 Guests</option>
+    </select>
+
+    <button onclick="searchRooms()">Search</button>
+</div>
+
+<p id="noResult">❌ No hotels found</p>
+
+<!-- 🏨 Rooms -->
+<section class="rooms">
+
+<!-- Pune -->
+<div class="room-card" data-city="pune" data-guest="2" onclick="selectRoom('Single',1000)">
+<img src="hotel1">
+<h3>Pune Single Room</h3>
+<p>₹1000</p>
+</div>
+<div class="room-card" data-city="pune" data-guest="2" onclick="selectRoom('Single',1000)">
+<img src="hote2">
+<h3>Pune Single Room</h3>
+<p>₹1000</p>
+</div><div class="room-card" data-city="thane" data-guest="2" onclick="selectRoom('Single',1000)">
+<img src="hotel3.png">
+<h3>Pune Single Room</h3>
+<p>₹1000</p>
+</div>
+<div class="room-card" data-city="pune" data-guest="4" onclick="selectRoom('Suite',4000)">
+<img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b">
+<h3>Pune Suite</h3>
+<p>₹4000</p>
+</div>
+
+<!-- Mumbai -->
+<div class="room-card" data-city="mumbai" data-guest="2" onclick="selectRoom('Double',2000)">
+<img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2">
+<h3>Mumbai Deluxe</h3>
+<p>₹2000</p>
+</div>
+
+<div class="room-card" data-city="mumbai" data-guest="3" onclick="selectRoom('Family',3000)">
+<img src="hotel4.jpg">
+<h3>Mumbai Family Room</h3>
+<p>₹3000</p>
+</div>
+
+<!-- Delhi -->
+<div class="room-card" data-city="delhi" data-guest="2" onclick="selectRoom('Standard',1800)">
+<img src="https://images.unsplash.com/photo-1590490360182-c33d57733427">
+<h3>Delhi Standard</h3>
+<p>₹1800</p>
+</div>
+
+<div class="room-card" data-city="delhi" data-guest="4" onclick="selectRoom('Luxury',4500)">
+<img src="https://images.unsplash.com/photo-1578683010236-d716f9a3f461">
+<h3>Delhi Luxury</h3>
+<p>₹4500</p>
+</div>
+
+<!-- Nagpur -->
+<div class="room-card" data-city="nagpur" data-guest="2" onclick="selectRoom('Budget',900)">
+<img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32">
+<h3>Nagpur Budget</h3>
+<p>₹900</p>
+</div>
+
+<!-- Bangalore -->
+<div class="room-card" data-city="bangalore" data-guest="3" onclick="selectRoom('Premium',3500)">
+<img src="https://images.unsplash.com/photo-1598928506311-c55ded91a20c">
+<h3>Bangalore Premium</h3>
+<p>₹3500</p>
+</div>
+
+</section>
+
+<!-- 📋 Booking -->
+<section class="booking-form">
+<h2>Book Room</h2>
+
+<form id="bookingForm">
+<input type="text" id="name" placeholder="Your Name" required>
+<input type="text" id="roomType" placeholder="Selected Room" readonly>
+
+<label>Check-in</label>
+<input type="date" id="checkin" required>
+
+<label>Check-out</label>
+<input type="date" id="checkout" required>
+
+<h3 id="totalPrice">Total: ₹0</h3>
+
+<button type="submit">Book Now</button>
+</form>
+
+<p id="message"></p>
+</section>
+
+<script>
+let selectedPrice = 0;
+
+// Select Room
+function selectRoom(type, price) {
+    document.getElementById("roomType").value = type;
+    selectedPrice = price;
+}
+
+// Search Function
+function searchRooms() {
+    let city = document.getElementById("city").value.toLowerCase().trim();
+    let guests = parseInt(document.getElementById("guests").value);
+
+    let rooms = document.querySelectorAll(".room-card");
+    let found = false;
+
+    rooms.forEach(room => {
+        let roomCity = room.dataset.city.toLowerCase();
+        let roomGuest = parseInt(room.dataset.guest);
+
+        if (
+            (city === "" || roomCity.includes(city)) &&
+            guests <= roomGuest
+        ) {
+            room.style.display = "block";
+            found = true;
+        } else {
+            room.style.display = "none";
+        }
+    });
+
+    document.getElementById("noResult").style.display = found ? "none" : "block";
+}
+
+// Price Calculation
+document.getElementById("checkin").addEventListener("change", calculate);
+document.getElementById("checkout").addEventListener("change", calculate);
+
+function calculate() {
+    let c1 = new Date(document.getElementById("checkin").value);
+    let c2 = new Date(document.getElementById("checkout").value);
+
+    if (c2 > c1) {
+        let days = (c2 - c1) / (1000 * 60 * 60 * 24);
+        document.getElementById("totalPrice").innerText =
+            "Total: ₹" + (days * selectedPrice);
+    }
+}
+
+// Booking
+document.getElementById("bookingForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    document.getElementById("message").innerText = "✅ Booking Confirmed!";
+});
+</script>
+
+</body>
+</html>
